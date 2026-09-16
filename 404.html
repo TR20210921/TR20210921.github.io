@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>404 · 走丢了</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b0f14'/%3E%3Ctext x='50' y='70' font-size='58' font-family='monospace' font-weight='700' fill='%234dd4ac' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg: #080b10; --text: #e6edf3; --muted: #8b9bb0;
+    --accent: #4dd4ac; --accent-2: #58a6ff;
+    --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center; overflow: hidden;
+    background: radial-gradient(90% 70% at 50% 0%, #0f1a26 0%, var(--bg) 62%);
+    color: var(--text); font-family: var(--font); text-align: center; padding: 24px;
+  }
+  .stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .star { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #9fd8ff; opacity: .55; animation: drift linear infinite; }
+  @keyframes drift { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
+  .panel { position: relative; z-index: 1; max-width: 560px; }
+  .code {
+    font-family: var(--mono); font-size: clamp(4.5rem, 20vw, 9rem); font-weight: 800; line-height: 1;
+    margin: 0; letter-spacing: .02em;
+    background: linear-gradient(100deg, var(--accent), var(--accent-2) 60%, #a371f7);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 0 42px rgba(77, 212, 172, .18);
+  }
+  h1 { margin: 6px 0 14px; font-size: clamp(1.1rem, 4vw, 1.5rem); }
+  p { margin: 0 0 30px; color: var(--muted); font-size: .95rem; line-height: 1.8; }
+  .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  a {
+    display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 11px;
+    border: 1px solid #22303f; background: #141b26; color: var(--text);
+    font-weight: 600; font-size: .93rem; text-decoration: none;
+    transition: transform .18s, border-color .18s, filter .18s;
+  }
+  a:hover { transform: translateY(-2px); border-color: var(--accent); text-decoration: none; }
+  a.primary { background: linear-gradient(120deg, var(--accent), var(--accent-2)); color: #04120d; border-color: transparent; }
+  a.primary:hover { filter: brightness(1.06); }
+  .hint { margin-top: 30px; font-family: var(--mono); font-size: .74rem; color: #56657a; }
+  @media (prefers-reduced-motion: reduce) { .star { animation: none; } }
+</style>
+</head>
+<body>
+<div class="stars" id="stars" aria-hidden="true"></div>
+<main class="panel">
+  <p class="code">404</p>
+  <h1>这个页面飘走了</h1>
+  <p>你要找的地址不存在，或者已经被我重构掉了。<br />回主页看看别的吧。</p>
+  <div class="btns">
+    <a class="primary" href="/">← 回主页</a>
+    <a href="https://github.com/TR20210921" target="_blank" rel="noopener">GitHub</a>
+  </div>
+  <p class="hint">TR20210921.github.io</p>
+</main>
+<script>
+  const box = document.getElementById('stars');
+  const n = Math.min(90, Math.floor(window.innerWidth / 14));
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement('span');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * -100 + '%';
+    s.style.animationDuration = (6 + Math.random() * 12) + 's';
+    s.style.animationDelay = (-Math.random() * 12) + 's';
+    s.style.opacity = 0.25 + Math.random() * 0.6;
+    box.appendChild(s);
+  }
+</script>
+</body>
+</html>
