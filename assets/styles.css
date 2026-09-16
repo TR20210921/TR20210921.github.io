@@ -16,6 +16,7 @@
   --accent-3: #a371f7;
   --shadow: 0 10px 30px rgba(0, 0, 0, .35);
   --radius: 16px;
+  --card-w: 360px;   /* 项目卡片最小宽度；卡片少时靠它保持自然尺寸，不拉满整行 */
   --max: 1080px;
   --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
   --mono: ui-monospace, "SFMono-Regular", "Cascadia Code", Consolas, "Liberation Mono", monospace;
@@ -185,7 +186,8 @@ a:hover { text-decoration: underline; }
 .timeline span { font-size: .82rem; color: var(--muted); }
 
 /* ── 项目卡片 ─────────────────────────────── */
-.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 18px; }
+/* auto-fill（不是 auto-fit）：卡片少时不拉伸撑满整行 */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--card-w), 1fr)); gap: 18px; }
 .pcard {
   position: relative; display: flex; flex-direction: column; gap: 12px;
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);

@@ -31,43 +31,13 @@ const CONFIG = {
   //   link   有链接才会渲染「查看仓库 →」，没有就不渲染死链。
   projects: [
     {
-      name: '数学建模竞赛全流程基建',
-      en: 'Math Modeling Competition',
-      icon: '📐',
-      repo: 'MathModelCompetition',
-      desc: '把数模竞赛从选题、建模到论文产出的整套流程做成可复用的工作流基建，覆盖数据处理、模型求解与结果汇总。',
-      tags: ['Python', '建模工作流', '数据处理'],
-      status: '本地 / 未公开',
-    },
-    {
       name: 'c4free Hypercube',
       en: 'c4free-hypercube-main',
       icon: '🧊',
       repo: 'c4free-hypercube-main',
-      desc: '围绕超立方体结构展开的实验项目，含可视化与计算脚本。',
+      desc: '围绕超立方体结构展开的实验项目，含计算求解与可视化脚本。',
       tags: ['算法实验', '可视化'],
       status: '本地 / 未公开',
-    },
-    {
-      name: 'dsh-routing-suite',
-      icon: '🧭',
-      desc: '注入器 × 思维模式路由套装：一条安装链装齐运行时手术台与 router-standard 预设，附 P1–P23 实测记录（路由 96%、收敛 100%）。',
-      tags: ['TypeScript', 'PowerShell', 'LLM 路由'],
-      status: '本地开发中',
-    },
-    {
-      name: 'dsh-super-injector',
-      icon: '💉',
-      desc: 'DSH 运行时插件注入器：免重启完成插件注入 / 热重载 / 侧挂转正 / 卸载与路由自愈，dev_* 工具全家桶。',
-      tags: ['TypeScript', '插件体系', '热重载'],
-      status: '本地开发中',
-    },
-    {
-      name: 'modlens',
-      icon: '👁️',
-      desc: '多模态视觉读取桥：给纯文本模型接上「看图」能力，输出结构化证据（OCR 全文、版面区域、语义、不确定项）并附评测集。',
-      tags: ['CLI', 'Vision', 'Evals'],
-      status: '学习 / 使用',
     },
   ],
 
