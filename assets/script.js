@@ -5,54 +5,69 @@
    └─────────────────────────────────────────────────────┘
    ═══════════════════════════════════════════════════════ */
 
+/* ── 个人信息：改这里就够了 ─────────────── */
+const CONTACT = {
+  name: 'Tianzhi Ren',
+  email: '202400820020@mail.sdu.edu.cn',
+  affiliation: '山东大学 · Shandong University',
+};
+/* 映射：data-field 的值 → CONTACT 的字段名 */
+const CONTACT_MAP = {
+  'profile-name': 'name',
+  'profile-email': 'email',
+  'profile-affiliation': 'affiliation',
+};
+
 const CONFIG = {
   username: 'TR20210921',
-
-  // 邮箱会同时写入「联系」卡片；留空则显示「待填写」
-  email: 'you@example.com',
 
   // 手写一行简介，展示在页面标题下方（留空则用 HTML 里写好的默认值）
   tagline: '',
 
-  // 要重点展示的仓库（按这个顺序渲染）。name 必须和 GitHub 仓库名一致。
-  // 顺带说明：nonce = 归属，「mine」原创 / 「credit」致谢他人作品
+  // 项目卡片（按数组顺序渲染）。
+  //   name / icon / desc / tags 是文案；
+  //   repo   填 GitHub 仓库名才会尝试用 API 补语言和 Star；
+  //   lang / stars / status 是仓库未公开时手动填的兜底显示；
+  //   link   有链接才会渲染「查看仓库 →」，没有就不渲染死链。
   projects: [
+    {
+      name: '数学建模竞赛全流程基建',
+      en: 'Math Modeling Competition',
+      icon: '📐',
+      repo: 'MathModelCompetition',
+      desc: '把数模竞赛从选题、建模到论文产出的整套流程做成可复用的工作流基建，覆盖数据处理、模型求解与结果汇总。',
+      tags: ['Python', '建模工作流', '数据处理'],
+      status: '本地 / 未公开',
+    },
+    {
+      name: 'c4free Hypercube',
+      en: 'c4free-hypercube-main',
+      icon: '🧊',
+      repo: 'c4free-hypercube-main',
+      desc: '围绕超立方体结构展开的实验项目，含可视化与计算脚本。',
+      tags: ['算法实验', '可视化'],
+      status: '本地 / 未公开',
+    },
     {
       name: 'dsh-routing-suite',
       icon: '🧭',
-      nonce: 'mine',
       desc: '注入器 × 思维模式路由套装：一条安装链装齐运行时手术台与 router-standard 预设，附 P1–P23 实测记录（路由 96%、收敛 100%）。',
       tags: ['TypeScript', 'PowerShell', 'LLM 路由'],
+      status: '本地开发中',
     },
     {
       name: 'dsh-super-injector',
       icon: '💉',
-      nonce: 'mine',
       desc: 'DSH 运行时插件注入器：免重启完成插件注入 / 热重载 / 侧挂转正 / 卸载与路由自愈，dev_* 工具全家桶。',
       tags: ['TypeScript', '插件体系', '热重载'],
-    },
-    {
-      name: 'dsh-router-standard',
-      icon: '🎛️',
-      nonce: 'mine',
-      desc: '思维模式路由预设：三行为带（spec / react / mixed）+ weak 内路由，按模型选 persona，接近零成本的每轮引导。',
-      tags: ['Prompt 工程', 'Persona', 'A/B 实测'],
+      status: '本地开发中',
     },
     {
       name: 'modlens',
       icon: '👁️',
-      nonce: 'credit',
       desc: '多模态视觉读取桥：给纯文本模型接上「看图」能力，输出结构化证据（OCR 全文、版面区域、语义、不确定项）并附评测集。',
       tags: ['CLI', 'Vision', 'Evals'],
-      credit: '参与贡献 / 使用',
-    },
-    {
-      name: 'dsh-agent-teams',
-      icon: '🤝',
-      nonce: 'credit',
-      desc: '多智能体团队协作框架：队长协议、DAG 任务图、质量门与评审闭环，把「一个模型干活」升级为「一支团队交付」。',
-      tags: ['Agent 编排', 'DAG', '质量门'],
-      credit: '参与贡献 / 使用',
+      status: '学习 / 使用',
     },
   ],
 
@@ -134,14 +149,24 @@ function reveal(el) {
   io.observe(el);
 }
 
-/* ── 4. 邮箱 / 年份 / 页脚 ──────────────── */
+/* ── 4. 个人信息 / 年份 / 链接 ───────────── */
 (function staticBits() {
-  const email = (CONFIG.email || '').trim();
-  const isPlaceholder = !email || email === 'you@example.com';
+  // 把 CONTACT 写进所有带 data-field 的元素
+  $$('[data-field]').forEach((el) => {
+    const val = CONTACT[CONTACT_MAP[el.dataset.field]];
+    if (val) el.textContent = val;
+  });
+
+  // 邮箱卡片同步成可点的 mailto
+  const email = (CONTACT.email || '').trim();
   const text = $('#mail-text');
   const card = $('#mail-card');
-  if (text) text.textContent = isPlaceholder ? '（待填写）' : email;
-  if (card && !isPlaceholder) card.setAttribute('href', `mailto:${email}`);
+  if (email) {
+    if (text) text.textContent = email;
+    if (card) card.setAttribute('href', `mailto:${email}`);
+  } else if (text) {
+    text.textContent = '（待填写）';
+  }
 
   const y = $('#year');
   if (y) y.textContent = String(new Date().getFullYear());
@@ -186,53 +211,73 @@ async function loadStats() {
   }
 }
 
-/* ── 6. 项目卡片渲染（静态兜底 + API 增强） ── */
+/* ── 6. 项目卡片渲染（静态文案 + 公开仓库的 API 增强） ── */
 function renderProjects() {
   const box = $('#project-cards');
   if (!box) return;
 
   box.innerHTML = CONFIG.projects.map((p) => {
-    const isMine = p.nonce !== 'credit';
-    const badge = isMine
-      ? '<span class="badge mine">原创</span>'
-      : `<span class="badge credit">${p.credit || '致谢'}</span>`;
     const tags = (p.tags || []).map((t) => `<span>${t}</span>`).join('');
+    // 只有在 CONFIG 里显式给了 lang/stars 才渲染这行，避免一排「—」
+    const hasMeta = p.lang || p.stars;
+    const meta = hasMeta
+      ? `<div class="pcard-meta">
+           <span class="lang"><i data-lang-dot style="${p.lang ? '' : 'display:none'}"></i><span data-lang-text>${p.lang || ''}</span></span>
+           <span>★ <span data-stars>${p.stars != null ? fmt(p.stars) : '—'}</span></span>
+           <span data-updated></span>
+         </div>`
+      : '';
+    const link = p.link
+      ? `<a class="repo" href="${p.link}" target="_blank" rel="noopener">查看仓库 →</a>`
+      : '';
+    const status = p.status ? `<span class="badge muted">${p.status}</span>` : '';
     return `
-      <article class="pcard reveal" data-repo="${p.name}">
+      <article class="pcard reveal" data-repo="${p.repo || ''}">
         <div class="pcard-head">
           <span class="ico" aria-hidden="true">${p.icon || '📦'}</span>
           <h3>${p.name}</h3>
-          ${badge}
+          ${status}
         </div>
+        ${p.en ? `<p class="pcard-en">${p.en}</p>` : ''}
         <p>${p.desc || ''}</p>
         ${tags ? `<div class="tags-mini">${tags}</div>` : ''}
-        <div class="pcard-meta">
-          <span class="lang"><i data-lang-dot></i><span data-lang-text>—</span></span>
-          <span>★ <span data-stars>—</span></span>
-          <span data-updated></span>
-        </div>
-        <a class="repo" href="https://github.com/${CONFIG.username}/${p.name}" target="_blank" rel="noopener">查看仓库 →</a>
+        ${meta}
+        ${link}
       </article>`;
   }).join('');
 
+  // 没填 repo 的卡片不再去 API 找，直接定格
+  $$('.pcard', box).filter((c) => !c.dataset.repo).forEach((c) => c.classList.add('is-missing'));
   $$('.pcard', box).forEach(reveal);
 }
 
 async function enrichProjects() {
-  const cards = $$('.pcard');
+  const cards = $$('.pcard[data-repo]').filter((c) => c.dataset.repo);
+  if (!cards.length) return;
+
   let repos = window.__repos;
   if (!repos) {
     try { repos = await ghFetch(`/users/${CONFIG.username}/repos?per_page=100&sort=updated`); }
-    catch { return; }   // 取数失败就保留静态卡片，不下「未公开」的判断
+    catch { return; }   // 取数失败就保留静态文案，不下任何判断
   }
   const byName = new Map(repos.map((r) => [r.name.toLowerCase(), r]));
 
   cards.forEach((card) => {
-    const r = byName.get((card.dataset.repo || '').toLowerCase());
+    const r = byName.get(card.dataset.repo.toLowerCase());
 
-    // 仓库还没推到 GitHub：降级显示，别留一个点了 404 的链接
-    if (!r) { card.classList.add('is-missing'); return; }
+    // 仓库未公开：保持卡片文案，只标记状态（私有库未认证 API 取不到）
+    if (!r) {
+      card.classList.add('is-missing');
+      if (!$('.badge.muted', card)) {
+        const b = document.createElement('span');
+        b.className = 'badge muted';
+        b.textContent = '本地 / 未公开';
+        $('.pcard-head', card)?.appendChild(b);
+      }
+      return;
+    }
 
+    // 公开仓库：补语言、Star、更新时间和链接
     const dot = $('[data-lang-dot]', card);
     const langText = $('[data-lang-text]', card);
     const stars = $('[data-stars]', card);
@@ -240,15 +285,23 @@ async function enrichProjects() {
 
     if (r.language) {
       if (langText) langText.textContent = r.language;
-      if (dot) dot.style.background = LANG_COLORS[r.language] || 'var(--accent)';
-    } else if (langText) {
-      langText.textContent = 'Mixed';
+      if (dot) { dot.style.display = ''; dot.style.background = LANG_COLORS[r.language] || 'var(--accent)'; }
     }
     if (stars) stars.textContent = fmt(r.stargazers_count || 0);
     if (updated && r.pushed_at) {
       const d = new Date(r.pushed_at);
       updated.textContent = `更新 ${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
     }
+    if (!$('.repo', card)) {
+      const a = document.createElement('a');
+      a.className = 'repo';
+      a.href = r.html_url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.textContent = '查看仓库 →';
+      card.appendChild(a);
+    }
+    $('.badge.muted', card)?.remove();
   });
 }
 

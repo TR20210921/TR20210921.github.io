@@ -18,27 +18,37 @@
 
 ## 怎么改内容
 
-**改基本信息**：编辑 `assets/script.js` 顶部的 `CONFIG`
+**改个人信息**：编辑 `assets/script.js` 顶部的 `CONTACT`（姓名 / 邮箱 / 学校）。
+HTML 里凡是带 `data-field="profile-xxx"` 的元素都会被自动填充，改一处全站生效。
 
 ```js
-const CONFIG = {
-  username: 'TR20210921',        // 换成你的用户名（统计数字、链接自动跟着变）
-  email: 'you@example.com',      // 填上真实邮箱，联系卡片会自动变成 mailto 链接
-  tagline: '',                   // 想在标题下自定义一句话就写这里
-  projects: [ /* 项目卡片列表，顺序即显示顺序 */ ],
-  extraStack: [],                // 想追加的技术栈标签
+const CONTACT = {
+  name: 'Tianzhi Ren',
+  email: '202400820020@mail.sdu.edu.cn',
+  affiliation: '山东大学 · Shandong University',
 };
 ```
 
-**改文案**：直接编辑 `index.html` 里对应 section 的文字。
+**改项目卡片**：编辑 `CONFIG.projects`，每张卡片支持的字段
+
+| 字段 | 作用 |
+|---|---|
+| `name` / `en` / `icon` / `desc` / `tags` | 中英文名、图标、简介、标签（纯文案） |
+| `repo` | 填 GitHub 仓库名。**只有填了才会去 API 补语言 / Star / 更新时间和链接** |
+| `lang` / `stars` | 仓库未公开时手动兜底显示的数值 |
+| `status` | 卡片右上角状态标记，如「本地 / 未公开」 |
+| `link` | 填了才渲染「查看仓库 →」；不填就没有链接，不会留下死链 |
+
+> 私有仓库用未认证 API 取不到数据，所以私有项目和本机作品请填 `status` 而不要填 `link`，
+> 卡片会如实标注「本地 / 未公开」，点击不会进 404。
 
 **改配色**：编辑 `assets/styles.css` 顶部 `:root` 的 `--accent` / `--accent-2` / `--accent-3` 等变量；
 浅色主题在 `html[data-theme="light"]` 那一块。
 
-**换项目**：只改 `CONFIG.projects` 里的 `name`（必须与 GitHub 仓库名一致），
-卡片上的语言 / Star / 更新时间会在页面加载时从 GitHub API 实时拉取。
+**改文案**：直接编辑 `index.html` 里对应 section 的文字。
 
 > 注意：GitHub 未认证 API 限速 60 次/小时/IP。页面只发 2~3 个请求，正常访问完全够用。
+> 账号没有公开数据时统计区会整块隐藏，不会留一排「—」。
 
 ## 本地预览
 
