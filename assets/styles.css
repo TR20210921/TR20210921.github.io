@@ -216,6 +216,16 @@ a:hover { text-decoration: underline; }
 .tags-mini span { font-size: .72rem; padding: 2px 8px; border-radius: 6px; background: var(--surface-2); color: var(--muted); }
 .pcard a.repo { font-size: .82rem; font-weight: 600; }
 
+/* 仓库在 GitHub 上还不存在时（本地作品尚未公开），降级而非留一个死链 */
+.pcard.is-missing { opacity: .62; }
+.pcard.is-missing a.repo {
+  pointer-events: none; color: var(--muted); text-decoration: line-through;
+}
+.pcard.is-missing .pcard-meta::after {
+  content: "未公开"; font-size: .72rem; padding: 2px 8px; border-radius: 6px;
+  background: var(--surface-2); color: var(--muted);
+}
+
 /* ── 技术栈 ───────────────────────────────── */
 .stack { display: grid; gap: 22px; margin-top: 26px; }
 .stack-group h3 { margin: 0 0 12px; font-size: .82rem; font-family: var(--mono); color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }

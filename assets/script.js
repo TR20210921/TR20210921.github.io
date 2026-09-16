@@ -219,16 +219,20 @@ function renderProjects() {
 }
 
 async function enrichProjects() {
+  const cards = $$('.pcard');
   let repos = window.__repos;
   if (!repos) {
     try { repos = await ghFetch(`/users/${CONFIG.username}/repos?per_page=100&sort=updated`); }
-    catch { return; }
+    catch { return; }   // 取数失败就保留静态卡片，不下「未公开」的判断
   }
   const byName = new Map(repos.map((r) => [r.name.toLowerCase(), r]));
 
-  $$('.pcard').forEach((card) => {
+  cards.forEach((card) => {
     const r = byName.get((card.dataset.repo || '').toLowerCase());
-    if (!r) return;
+
+    // 仓库还没推到 GitHub：降级显示，别留一个点了 404 的链接
+    if (!r) { card.classList.add('is-missing'); return; }
+
     const dot = $('[data-lang-dot]', card);
     const langText = $('[data-lang-text]', card);
     const stars = $('[data-stars]', card);
@@ -245,7 +249,6 @@ async function enrichProjects() {
       const d = new Date(r.pushed_at);
       updated.textContent = `更新 ${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
     }
-    card.classList.remove('is-missing');
   });
 }
 
